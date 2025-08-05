@@ -1,23 +1,25 @@
+// ✅ يجب وضع كل الاستيرادات في أعلى الملف
 import { useEffect, useState } from "react";
 import moment from "moment";
 import "moment/locale/ar";
+
+// ✅ خارج الكومبوننت لتعريفات ثابتة
+const arabicNames = {
+  Fajr: "الفجر",
+  Sunrise: "الشروق",
+  Dhuhr: "الظهر",
+  Asr: "العصر",
+  Maghrib: "المغرب",
+  Isha: "العشاء",
+};
+
+const prayerOrder = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
 function Azan() {
   const [prayerTimes, setPrayerTimes] = useState({});
   const [nextPrayer, setNextPrayer] = useState("");
   const [countdown, setCountdown] = useState("");
   const [location, setLocation] = useState({ city: "مدينتك", country: "" });
-
-  const arabicNames = {
-    Fajr: "الفجر",
-    Sunrise: "الشروق",
-    Dhuhr: "الظهر",
-    Asr: "العصر",
-    Maghrib: "المغرب",
-    Isha: "العشاء",
-  };
-
-  const prayerOrder = ["Fajr", "Sunrise", "Dhuhr", "Asr", "Maghrib", "Isha"];
 
   useEffect(() => {
     moment.locale("ar");
