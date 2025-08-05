@@ -1,22 +1,11 @@
-import React, { useState } from 'react';
-
+import React from 'react';
+import Takate from './Takate';
+import Adue from './Adue';
 const Home = () => {
-    const [state, setstate] = useState(0);
-
-    function onClick(){
-          setstate (state +1);
-    }
-    function onClick1(){
-        setstate (state -1);
-  }
     return (
         <div>
-            <button type='submit' onClick={onClick}>btn + </button>
-            <button onClick={onClick1}>btn - </button>
-            <h1>{state}</h1>
-
-
-            
+            <Takate/>
+            <Adue/>
         </div>
     );
 }
