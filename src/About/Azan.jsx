@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import "moment/locale/ar"; // لتفعيل اللغة العربية
+import "moment/locale/ar";
 
 function Azan() {
   const [prayerTimes, setPrayerTimes] = useState({});
@@ -21,23 +21,6 @@ function Azan() {
 
   useEffect(() => {
     moment.locale("ar");
-    getLocation();
-  }, []);
-
-  useEffect(() => {
-    if (location.city !== "مدينتك") {
-      fetchPrayerTimes();
-    }
-  }, [location]);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      updateNextPrayer();
-    }, 1000);
-    return () => clearInterval(timer);
-  }, [prayerTimes]);
-
-  const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
@@ -55,50 +38,58 @@ function Azan() {
         }
       });
     }
-  };
+  }, []);
 
-  const fetchPrayerTimes = async () => {
-    const today = moment().format("DD-MM-YYYY");
-    try {
-      const res = await fetch(
-        `https://api.aladhan.com/v1/timingsByCity/${today}?city=${location.city}&country=${location.country}&method=5`
-      );
-      const data = await res.json();
-      setPrayerTimes(data.data.timings);
-    } catch (error) {
-      console.error("Failed to fetch prayer times:", error);
-    }
-  };
-
-  const updateNextPrayer = () => {
-    const now = moment();
-    const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
-    let foundNext = false;
-
-    for (let i = 0; i < prayerNames.length; i++) {
-      const prayer = prayerNames[i];
-      const timeStr = prayerTimes[prayer];
-      if (!timeStr) continue;
-
-      const prayerTime = moment(timeStr, "HH:mm");
-      if (now.isBefore(prayerTime)) {
-        setNextPrayer(arabicNames[prayer]);
-        const diff = moment.duration(prayerTime.diff(now));
-        setCountdown(
-          `${diff.hours()} س ${diff.minutes()} د ${diff.seconds()} ث`
+  useEffect(() => {
+    const fetchPrayerTimes = async () => {
+      const today = moment().format("DD-MM-YYYY");
+      try {
+        const res = await fetch(
+          `https://api.aladhan.com/v1/timingsByCity/${today}?city=${location.city}&country=${location.country}&method=5`
         );
-        foundNext = true;
-        break;
+        const data = await res.json();
+        setPrayerTimes(data.data.timings);
+      } catch (error) {
+        console.error("Failed to fetch prayer times:", error);
       }
-    }
+    };
 
-    if (!foundNext && prayerTimes["Fajr"]) {
-      const fajrTomorrow = moment(prayerTimes["Fajr"], "HH:mm").add(1, "day");
-      const diff = moment.duration(fajrTomorrow.diff(now));
-      setNextPrayer("الفجر (غدًا)");
-      setCountdown(`${diff.hours()} س ${diff.minutes()} د ${diff.seconds()} ث`);
+    if (location.city !== "مدينتك") {
+      fetchPrayerTimes();
     }
-  };
+  }, [location]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const now = moment();
+      const prayerNames = ["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"];
+      let foundNext = false;
+
+      for (let i = 0; i < prayerNames.length; i++) {
+        const prayer = prayerNames[i];
+        const timeStr = prayerTimes[prayer];
+        if (!timeStr) continue;
+
+        const prayerTime = moment(timeStr, "HH:mm");
+        if (now.isBefore(prayerTime)) {
+          setNextPrayer(arabicNames[prayer]);
+          const diff = moment.duration(prayerTime.diff(now));
+          setCountdown(`${diff.hours()} س ${diff.minutes()} د ${diff.seconds()} ث`);
+          foundNext = true;
+          break;
+        }
+      }
+
+      if (!foundNext && prayerTimes["Fajr"]) {
+        const fajrTomorrow = moment(prayerTimes["Fajr"], "HH:mm").add(1, "day");
+        const diff = moment.duration(fajrTomorrow.diff(now));
+        setNextPrayer("الفجر (غدًا)");
+        setCountdown(`${diff.hours()} س ${diff.minutes()} د ${diff.seconds()} ث`);
+      }
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [prayerTimes]);
 
   return (
     <div dir="rtl" className="max-w-6xl mx-auto bg-white shadow-xl rounded-xl p-6 mt-10 text-center">
