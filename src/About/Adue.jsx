@@ -7,14 +7,14 @@ function Adue() {
   const [nextPrayer, setNextPrayer] = useState("");
 
   // ✅ هنا بنفعل التشغيل بعد أول كليك من المستخدم
-  useEffect(() => {
-    const allowPlay = () => {
-      const dummy = new Audio();
-      dummy.play().catch(() => {});
-      document.removeEventListener("click", allowPlay);
-    };
-    document.addEventListener("click", allowPlay);
-  }, []);
+  // useEffect(() => {
+  //   const allowPlay = () => {
+  //     const dummy = new Audio();
+  //     dummy.play().catch(() => {});
+  //     document.removeEventListener("click", allowPlay);
+  //   };
+  //   document.addEventListener("click", allowPlay);
+  // }, []);
 
   useEffect(() => {
     fetch("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5")
