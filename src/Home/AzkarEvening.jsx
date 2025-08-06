@@ -32,7 +32,7 @@ function AzkarEvening() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 text-center">
+    <div className="max-w-6xl mx-auto px-4 py-10 text-center">
       <h1 className="text-3xl font-bold text-purple-600 dark:text-sky-400 mb-8">
         🌃️ أذكار المساء
       </h1>

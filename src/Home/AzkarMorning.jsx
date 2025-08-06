@@ -26,7 +26,7 @@ const morningAzkar = [
 
 function AzkarMorning() {
   return (
-    <div className="max-w-4xl mx-auto px-4 py-10 text-center">
+    <div className="max-w-6xl mx-auto px-4 py-10 text-center">
       <h1 className="text-3xl font-bold text-blue-600 dark:text-yellow-400 mb-8">
         🌅 أذكار الصباح
       </h1>
